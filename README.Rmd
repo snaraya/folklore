@@ -1,0 +1,48 @@
+---
+output: github_document
+editor_options: 
+  chunk_output_type: console
+---
+
+# Análisis de las letras de Taylor Swift: *folklore*
+
+![folklore](images/taylor_swift_wide.png)
+
+Usando las instrucciones de Ariane Aumaitre en su [blog](https://arianeaumaitre.com/2019/09/15/tutorial-text-analysis-and-data-visualization-with-taylor-swift-songs/) hice un pequeño análisis de las letras de las canciones del album folklore de Taylor Swift. Lamentablemente, no pude usar el paquete `genius`, así que descargué una por una las letras del album usando el paquete `geniusr`. Para usar este último paquete, es necesario crear una cuenta en [genius](https://genius.com).
+
+```{r}
+library(tidyverse)
+library(tayloRswift)
+library(tidytext)
+library(extrafont)
+```
+
+```{r}
+folklore <- read_rds("folklore.rds")
+```
+
+
+```{r}
+# Token 
+folklore_tokens <- folklore %>% 
+  unnest_tokens(word, line)
+```
+
+```{r}
+folklore_tokens
+```
+
+```{r}
+folklore_tokens %>% 
+  count(word, sort = T)
+```
+
+```{r}
+tidy_folklore <- folklore_tokens %>%
+  anti_join(stop_words) %>% 
+  filter(!word %in% c("ooh","ah"))
+
+tidy_folklore %>%
+  count(word, sort = TRUE)
+```
+
